@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="color-scheme" content="dark light">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/css/default.css">
+    <link rel="stylesheet" href="static/css/modal.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+      integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+      integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous">
+    </script>
+  </head>
+  <body>
+      <main>
+          <div class="container">
+            <div class="box">
+                <div class="flex-row">
+                    <h1>Hangman Game</h1>
+                </div>
+                <div class="flex-row">
+                    <div id="MainMenu" class="">
+                        <button id="NewGame" class="btn btn-primary">New Game</button>
+                        <button id="SettingsButton" class="btn btn-primary">Settings</button>
+                        <button id="killButtonModal" class="btn btn-primary">Close App</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+      </main>
+      <div class="modal">
+        <div class="modal-content">
+          <span class="close-btn">&times;</span>
+          <div class="text-center">
+            <h4>¿Seguro que quieres salir de la aplicación?</h4>
+          </div>
+          <div class="flex-row text-center">
+            <button id="killButtonSi" class="btn btn-success btn-lg btn-block">    Si    </button>
+            <button id="killButtonNo" class="btn btn-danger btn-lg btn-block">    No    </button>
+        </div>
+      </div>
+  </body>
+  <footer>
+      <button class="button corner-button">White/Dark mode</button>
+  </footer>
+  <script src="static/js/settings.js"></script>
+  <!-- https://www.cssscript.com/confirmation-modal/ -->
+</html>
