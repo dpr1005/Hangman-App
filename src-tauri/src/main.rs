@@ -33,14 +33,14 @@ fn main() -> Result<()> {
         })
     })?;
 
-    insert_record(&mut conn_mut,  Word {
-        id: 1000,
-        word: "hello".to_string(),
-        language: "en".to_string(),
-        type_: "noun".to_string(),
-        group: "noun".to_string(),
-        size: 5,
-    })?;
+    // insert_record(&mut conn_mut,  Word {
+    //     id: 1000,
+    //     word: "hello".to_string(),
+    //     language: "en".to_string(),
+    //     type_: "noun".to_string(),
+    //     group: "noun".to_string(),
+    //     size: 5,
+    // })?;
 
     rows.for_each(|row| {
         println!("{:?}", row.unwrap());
