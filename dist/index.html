@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="static/css/default.css">
     <link rel="stylesheet" href="static/css/modal.css">
+    <link rel="stylesheet" href="static/css/darkLightMode.css">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
@@ -16,23 +17,27 @@
       integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous">
     </script>
   </head>
-  <body>
+  <body id="body" class="dark-mode">
       <main>
-          <div class="container">
+        <div class="d-flex align-items-center min-vh-100">
+          <div class="container text-center">
             <div class="box">
                 <div class="flex-row">
                     <h1>Hangman Game</h1>
                 </div>
                 <div class="flex-row">
                     <div id="MainMenu" class="">
-                        <button id="NewGame" class="btn btn-primary">New Game</button>
+                        <button id="newGameButton" class="btn btn-primary">New Game</button>
                         <button id="SettingsButton" class="btn btn-primary">Settings</button>
                         <button id="killButtonModal" class="btn btn-primary">Close App</button>
                     </div>
                 </div>
             </div>
           </div>
+        </div>
+        <button type="button" name="dark_light" onclick="toggleDarkLight()" title="Toggle dark/light mode">🌛</button>
       </main>
+
       <div class="modal">
         <div class="modal-content">
           <span class="close-btn">&times;</span>
@@ -46,8 +51,8 @@
       </div>
   </body>
   <footer>
-      <button class="button corner-button">White/Dark mode</button>
   </footer>
   <script src="static/js/settings.js"></script>
+  <script src="static/js/darkLightModeSwitch.js"></script>
   <!-- https://www.cssscript.com/confirmation-modal/ -->
 </html>

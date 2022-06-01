@@ -1,5 +1,5 @@
 //import { message } from "@tauri-apps/api/dialog";
-//const invoke = window.__TAURI__.invoke;
+const invoke = window.__TAURI__.invoke;
 
 function exitApp() {
     invoke('kill_app')
@@ -33,4 +33,11 @@ killButtonSi.addEventListener("click", () => {
 
 killButtonNo.addEventListener("click", () => {
     modal.style.display = "none"
+});
+
+
+const newGameButton = document.querySelector("#newGameButton");
+
+newGameButton.addEventListener("click", () => {
+  window.location.href = "./game_config.html";
 });
