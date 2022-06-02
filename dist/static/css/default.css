@@ -8,7 +8,6 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-
   min-height: 100vh;
   padding: 2rem;
 
@@ -17,6 +16,10 @@ body {
 
 .container {
   text-align: center;
+}
+
+.btn {
+  cursor: pointer;
 }
 
 .cards {
@@ -32,6 +35,7 @@ body {
   transform-style: preserve-3d;
   will-change: transform;
   transition: transform .5s;
+  cursor: pointer;
 }
 
 .background1 {
