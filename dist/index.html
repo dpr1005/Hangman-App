@@ -16,8 +16,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
       integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous">
     </script>
+    <script src="static/js/darkLightModeSwitch.js"></script>
   </head>
-  <body id="body" class="dark-mode">
+  <body id="body" class="dark-mode" onload="darkMode()">
       <main>
         <div class="d-flex align-items-center min-vh-100">
           <div class="container text-center">
@@ -35,7 +36,7 @@
             </div>
           </div>
         </div>
-        <button type="button" name="dark_light" onclick="toggleDarkLight()" title="Toggle dark/light mode">🌛</button>
+        <a href="#" onclick="toggleDarkLight()">Toggle Dark/Light Mode</a>
       </main>
 
       <div class="modal">
@@ -53,6 +54,4 @@
   <footer>
   </footer>
   <script src="static/js/settings.js"></script>
-  <script src="static/js/darkLightModeSwitch.js"></script>
-  <!-- https://www.cssscript.com/confirmation-modal/ -->
 </html>

@@ -39,5 +39,5 @@ killButtonNo.addEventListener("click", () => {
 const newGameButton = document.querySelector("#newGameButton");
 
 newGameButton.addEventListener("click", () => {
-  window.location.href = "./game_config.html";
+  window.location.href = "gameNewLoad.html";
 });

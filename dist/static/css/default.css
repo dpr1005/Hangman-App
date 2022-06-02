@@ -1,3 +1,7 @@
+.html {
+  font-size: 62.5%;
+}
+
 :root {
   color-scheme: light dark;
 }
@@ -8,11 +12,67 @@ body {
   min-height: 100vh;
   padding: 2rem;
 
-  color: #111;
-  background: var(--background-color);
   text-align: center;
 }
 
 .container {
   text-align: center;
+}
+
+.cards {
+  perspective: 5rem;
+  }
+
+.card {
+  height: 25rem;
+  background-size: cover;
+  border: 2px solid rgba(255, 255, 255, .25);
+  border-radius: 10px;
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform .5s;
+}
+
+.background1 {
+  background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
+  background-size: 400% 400%;
+  animation: animate-background 10s infinite ease-in-out;
+}
+
+.background2 {
+  background: linear-gradient(to right, #fcb045, #833ab4, #fd1d1d);
+  background-size: 400% 400%;
+  animation: animate-background 10s infinite ease-in-out;
+}
+
+.card:hover {
+  transform: translateZ(10px) rotateX(20deg) rotateY(30deg);
+}
+
+.card-title {
+  font-weight: bold;
+  font-size: 1.8rem;
+  text-shadow: 0 0 10px rgba(0, 0, 0, .5);
+  position: absolute;
+  top: 50%;
+  right: 20%;
+  transform: translateY(-50%);
+  transition: transform .5s;
+}
+
+.card:hover .card-title {
+  transform: translateZ(50px);
+}
+
+@keyframes animate-background {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
