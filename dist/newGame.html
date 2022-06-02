@@ -21,43 +21,36 @@
     </script>
     <script src="static/js/darkLightModeSwitch.js"></script>
 </head>
-
 <body id="body" onload="darkMode()">
     <main>
         <div class="d-flex align-items-center min-vh-100">
             <div class="container text-center">
                 <div class="row">
-                    <div class="col-md-5">
-                        <div id="newGameCard" class="card background1">
-                            <div class="card-title">
-                                New Game
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-2"></div>
-                    <div class="col-md-5">
-                        <div id="loadGameCard" class="card background2">
-                            <div class="card-title">
-                                Load Game
-                            </div>
-                        </div>
-                    </div>
+                    <form name="customWordForm" action="game.html" onsubmit="return checkNonEmpty()" method="get" required>
+                        <label for="customWord">Custom word</label><br>
+                        <input type="text" id="customWord" name="customWord"><br><br>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+                <div class="row">
+                    <form action="">
+                        <!-- Leer BD, cargar opciones y seleccionar -->
+                    </form>
                 </div>
             </div>
         </div>
-        <a href="index.html">Main Menu</a>
+        <a href="gameNewLoad.html">Back to New/Load Game</a>
     </main>
 </body>
+
 <script>
-    const newGameCard = document.getElementById("newGameCard");
-    const loadGameCard = document.getElementById("loadGameCard");
-
-    newGameCard.addEventListener("click", () => {
-        window.location.href = "newGame.html";
-    });
-
-    loadGameCard.addEventListener("click", () => {
-        window.location.href = "loadGame.html";
-    });
+    function checkNonEmpty() {
+        var customWord = document.getElementById("customWord").value;
+        if (customWord == "") {
+            alert("To play a custom game, you must enter a word.");
+            return false;
+        }
+    }
 </script>
+
 </html>
