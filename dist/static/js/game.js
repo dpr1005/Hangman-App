@@ -1,3 +1,5 @@
+const tauriWindow = window.__TAURI__.window;
+
 let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const alphabet = document.getElementById('alphabet');
 const passwordBoard = [
@@ -74,18 +76,34 @@ const deactivateLetter = function (hit, letter, audio) {
 const result = document.querySelector('#result');
 const finish = function (success) {
     if (success) {
-        result.innerHTML = `<h1>NICE WORK!</h1><button id='playAgainButton' class='btn'>PLAY AGAIN</button><br><button id='changeWordButton' class='btn'>CHANGE WORD</button>`;
+        result.innerHTML = `<h1>NICE WORK!</h1><button id='playAgainButton' class='btn'>PLAY AGAIN</button> <button id='changeWordButton' class='btn'>CHANGE WORD</button>`;
         clearInterval(countDown);
+        document
+            .querySelector('#playAgainButton')
+            .addEventListener('click', () => location.reload());
+        document
+            .querySelector('#changeWordButton')
+            .addEventListener('click', () => window.location = 'newGame.html');
     } else {
-        result.innerHTML = `<h1>YOU LOST!</h1><button class='btn'>TRY AGAIN</button>`;
+        result.innerHTML = `<h1>YOU LOST!</h1><button id='tryAgainButton' class='btn'>TRY AGAIN</button><button id='searchWordButton' class='btn'>SEARCH WORD</button>`;
         clearInterval(countDown);
+        document
+            .querySelector('#tryAgainButton')
+            .addEventListener('click', () => window.location = 'newGame.html');
+        document
+            .querySelector('#searchWordButton')
+            .addEventListener('click', () => {
+                const webview = new tauriWindow.WebviewWindow('searchWordBrowser', {
+                    url: 'https://www.google.com/search?q=' + password,
+                });
+                webview.once('tauri://created', () => {
+                    webview.show();
+                });
+                webview.once('tauri://error', (error) => {
+                    console.error(error);
+                });
+            });
     }
-    document
-        .querySelector('#playAgainButton')
-        .addEventListener('click', () => location.reload());
-    document
-        .querySelector('#changeWordButton')
-        .addEventListener('click', () => window.location = 'newGame.html');
 };
 const timer = function () {
     const timer = document.querySelector('#timer');
