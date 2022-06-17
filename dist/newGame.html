@@ -26,16 +26,58 @@
         <div class="d-flex align-items-center min-vh-100">
             <div class="container text-center">
                 <div class="row">
-                    <form name="customWordForm" action="game.html" onsubmit="return checkNonEmpty()" method="get" required>
-                        <label for="customWord">Custom word</label><br>
+                    <form name="customWordForm" action="game.html" onsubmit="return checkNonEmpty('customWord')" method="get" required>
+                        <label for="customWord">
+                            <h2>Custom word</h2>
+                        </label>
+                        <br>
                         <input type="text" id="customWord" name="customWord"><br><br>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Submit custom</button>
                     </form>
                 </div>
+                <hr class="my-4" width="100%">
                 <div class="row">
-                    <form action="">
-                        <!-- Leer BD, cargar opciones y seleccionar -->
-                    </form>
+                    <div class="col-md-5">
+                        <form name="wordTypeForm" onchange="return updateWordType('wordTypeSelect')">
+                            <label for="wordType">
+                                <h2>Word type</h2>
+                            </label>
+                            <br>
+                            <select class="form-select form-select-lg mb-3" id="wordTypeSelect" name="wordType">
+                                <option value="" selected>Select word type</option>
+                            </select>
+                        </form>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-5">
+                        <form name="wordTypeForm" onchange="return updateWordGroup('wordGroupSelect')">
+                            <label for="wordType">
+                                <h2>Word group</h2>
+                            </label>
+                            <br>
+                            <select class="form-select form-select-lg mb-3" id="wordGroupSelect" name="wordGroup">
+                                <option value="" selected>Select word group</option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+                <hr class="my-4" width="100%">
+                <div class="row">
+                    <div class="col-md-5">
+                        <form name="wordLengthForm" onchange="return updateWordLength('wordLengthSelect')">
+                            <label for="wordLength">
+                                <h2>Word length</h2>
+                            </label>
+                            <br>
+                            <select class="form-select form-select-lg mb-3" id="wordLengthSelect" name="wordLength" disabled>
+                                <option value="" selected>Select word length</option>
+                            </select>
+                        </form>
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-5">
+                        <button type="button" class="btn btn-primary" onclick="generateWord()">Generate word</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,14 +85,44 @@
     </main>
 </body>
 
+<script src="static/js/wordSelection.js"></script>
 <script>
-    function checkNonEmpty() {
-        var customWord = document.getElementById("customWord").value;
-        if (customWord == "") {
-            alert("To play a custom game, you must enter a word.");
-            return false;
+    function readyToCount() {
+        if (checkNonEmpty('wordTypeSelect') && checkNonEmpty('wordGroupSelect')) {
+            document.getElementById('wordLengthSelect').disabled = false;
+            findWordsLength();
+        } else {
+            document.getElementById('wordLengthSelect').disabled = true;
         }
     }
+
+    function checkNonEmpty(id, _alert=false) {
+        var strToCheck = document.getElementById(id).value;
+        if (strToCheck == "" ) {
+            if (_alert) {
+                alert("A word must be selected or written in order to play.");
+            }
+            return false;
+        }
+        return true;
+    }
+
+    function updateWordType(id) {
+        checkNonEmpty(id, true);
+        readyToCount();
+        var wordType = document.getElementById(id).value;
+        console.log(wordType);
+    }
+
+    function updateWordGroup(id) {
+        checkNonEmpty(id, true);
+        readyToCount();
+        var wordGroup = document.getElementById(id).value;
+        console.log(wordGroup);
+    }
+
+    findWordTypes();
+    findWordGroups();
 </script>
 
 </html>
