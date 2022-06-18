@@ -1,11 +1,7 @@
-use std::{string, fmt::format};
-
-use rusqlite::{Connection, Result, types, Statement, Rows};
-use serde::de::value::Error;
+use rusqlite::{Connection, Result};
 
 use crate::structs::Word;
 
-#[tauri::command]
 pub fn insert_record(record: Word) -> Result<()> {
     let size = record.word.len() as i32;
     let conn: Connection = Connection::open("database.sqlite").unwrap();
@@ -14,17 +10,16 @@ pub fn insert_record(record: Word) -> Result<()> {
         "INSERT INTO words (word, language, type, group_, size) VALUES (?1, ?2, ?3, ?4, ?5)",
         &[&record.word, &record.language, &record.type_, &record.group, &size.to_string()],
     )?;
-
+    print!("DONE");
     Ok(())
 }
 
-#[tauri::command]
-pub fn remove_record() -> Result<()> {
+pub fn remove_record(record: String) -> Result<()> {
     let conn: Connection = Connection::open("database.sqlite").unwrap();
 
     conn.execute(
-        "DELETE FROM words WHERE id = $1",
-        &[&1],
+        "DELETE FROM words WHERE word = ?1",
+        &[&record],
     )?;
 
     Ok(())
@@ -60,7 +55,7 @@ pub fn unique_groups() -> Result<Vec<String>> {
 
 pub fn unique_lengths(type_: String, group_: String) -> Result<Vec<i32>> {
     let conn: Connection = Connection::open("database.sqlite").unwrap();
-    let mut query = "";
+    let query;
     let mut stmt;
     let mut rows;
 
