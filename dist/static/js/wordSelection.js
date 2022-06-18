@@ -10,11 +10,10 @@ function addOptionsToSelect(selectId, options) {
     for (let i = 0; i < selectLength; i++) {
         select.removeChild(select.lastChild);
     }
-    if (!options.includes('random')) {
-        options.push('random');
+    if (!options.includes('all')) {
+        options.push('all');
     }
     options.sort((a, b) => ((typeof b === "number") - (typeof a === "number")) || (a > b ? 1 : -1));
-    console.log(options);
 
     for(let i = 0; i < options.length; i++) {
         let option = document.createElement("option");
@@ -35,7 +34,7 @@ function findWordTypes() {
             addOptionsToSelect('wordTypeSelect', result);
         })
         .catch(e => {
-            console.log(e);
+            alert('There was an error while finding the word types');
         });
 }
 
@@ -45,7 +44,7 @@ function findWordGroups() {
             addOptionsToSelect('wordGroupSelect', result);
         })
         .catch(e => {
-            console.log(e);
+            alert('There was an error while finding the word groups');
         });
 }
 
@@ -56,8 +55,29 @@ function findWordsLength() {
     })
     .then(function (result) {
         addOptionsToSelect('wordLengthSelect', result);
+        allowStarting();
     })
     .catch(e => {
-        console.log(e);
+        alert('There was an error while finding the word lengths');
+    });
+}
+
+function generateWord() {
+    invoke('generate_word', {
+        wordType: document.getElementById('wordTypeSelect').value,
+        group: document.getElementById('wordGroupSelect').value,
+        length: document.getElementById('wordLengthSelect').value
+    })
+    .then(function (result) {
+        if (result.length > 0) {
+            sessionStorage.setItem('playingWord', JSON.stringify(result));
+            window.location.href = 'game.html';
+        } else {
+            alert("There is no words stored in the database that meets the given criteria");
+        }
+        
+    })
+    .catch(e => {
+        alert('There was an error while generating the word');
     });
 }

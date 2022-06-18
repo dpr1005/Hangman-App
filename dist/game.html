@@ -42,12 +42,15 @@
     <script>
         window.onload = darkMode();
         function toNormalForm(str) {
-        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         }
         const params = new URLSearchParams(window.location.search);
         const word = document.querySelector('#word');
         let playingWord = params.get('customWord');
-         playingWord = toNormalForm(playingWord);
+        
+        if (playingWord != null) {
+            playingWord = toNormalForm(playingWord);
+        }  
     </script>
     <script src="./static/js/game.js"></script>
 </html>

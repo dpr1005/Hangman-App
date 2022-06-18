@@ -3,7 +3,7 @@ const invoke = window.__TAURI__.invoke;
 function exitApp() {
     invoke('kill_app')
         .catch(e => {
-            console.log(e);
+            alert('An error was encountered while exiting the app');
         });
 }
 

@@ -38,7 +38,7 @@
                 <hr class="my-4" width="100%">
                 <div class="row">
                     <div class="col-md-5">
-                        <form name="wordTypeForm" onchange="return updateWordType('wordTypeSelect')">
+                        <form name="wordTypeForm" onchange="return updateFormData('wordTypeSelect')">
                             <label for="wordType">
                                 <h2>Word type</h2>
                             </label>
@@ -50,7 +50,7 @@
                     </div>
                     <div class="col-md-2"></div>
                     <div class="col-md-5">
-                        <form name="wordTypeForm" onchange="return updateWordGroup('wordGroupSelect')">
+                        <form name="wordTypeForm" onchange="return updateFormData('wordGroupSelect')">
                             <label for="wordType">
                                 <h2>Word group</h2>
                             </label>
@@ -64,19 +64,24 @@
                 <hr class="my-4" width="100%">
                 <div class="row">
                     <div class="col-md-5">
-                        <form name="wordLengthForm" onchange="return updateWordLength('wordLengthSelect')">
+                        <form name="wordLengthForm">
                             <label for="wordLength">
                                 <h2>Word length</h2>
                             </label>
                             <br>
-                            <select class="form-select form-select-lg mb-3" id="wordLengthSelect" name="wordLength" disabled>
+                            <select class="form-select form-select-lg mb-3" id="wordLengthSelect" name="wordLength" onchange="allowStarting()" disabled>
                                 <option value="" selected>Select word length</option>
                             </select>
                         </form>
                     </div>
                     <div class="col-md-2"></div>
                     <div class="col-md-5">
-                        <button type="button" class="btn btn-primary" onclick="generateWord()">Generate word</button>
+                        <form name="generateWorForm" id="generateWordForm" action="game.html" method="get" required>
+                            <label for="generateWord">
+                                <h2>Generate word</h2>
+                            </label>
+                            <button id="generateWordButton" type="button" class="btn btn-primary" onclick="generateWord()" disabled>Generate word</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -87,6 +92,7 @@
 
 <script src="static/js/wordSelection.js"></script>
 <script>
+    sessionStorage.setItem("playingWord", "");
     function readyToCount() {
         if (checkNonEmpty('wordTypeSelect') && checkNonEmpty('wordGroupSelect')) {
             document.getElementById('wordLengthSelect').disabled = false;
@@ -96,29 +102,31 @@
         }
     }
 
+    function allowStarting() {
+        if (checkNonEmpty('wordLengthSelect') && checkNonEmpty('wordTypeSelect') && checkNonEmpty('wordGroupSelect')) {
+            document.getElementById('generateWordButton').disabled = false;
+        } else {
+            document.getElementById('generateWordButton').disabled = true;
+        }
+    }
+
     function checkNonEmpty(id, _alert=false) {
         var strToCheck = document.getElementById(id).value;
         if (strToCheck == "" ) {
             if (_alert) {
                 alert("A word must be selected or written in order to play.");
+                document.getElementById('generateWordButton').disabled = true;
             }
             return false;
         }
         return true;
     }
 
-    function updateWordType(id) {
+    function updateFormData(id) {
         checkNonEmpty(id, true);
         readyToCount();
-        var wordType = document.getElementById(id).value;
-        console.log(wordType);
-    }
-
-    function updateWordGroup(id) {
-        checkNonEmpty(id, true);
-        readyToCount();
-        var wordGroup = document.getElementById(id).value;
-        console.log(wordGroup);
+        allowStarting();
+        
     }
 
     findWordTypes();

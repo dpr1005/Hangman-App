@@ -2,9 +2,15 @@ const tauriWindow = window.__TAURI__.window;
 
 let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const alphabet = document.getElementById('alphabet');
-const passwordBoard = [
-    playingWord
-];
+let playingStored = JSON.parse(sessionStorage.getItem('playingWord'));
+
+let passwordBoard;
+if (Array.isArray(playingStored)) {
+    passwordBoard = playingStored;
+} else {
+    [playingWord];
+}
+
 const maxTries = 7;
 const passwordDiv = document.querySelector('#board');
 const imgDiv = document.querySelector('#hangin-dude');
@@ -76,7 +82,7 @@ const deactivateLetter = function (hit, letter, audio) {
 const result = document.querySelector('#result');
 const finish = function (success) {
     if (success) {
-        result.innerHTML = `<h1>NICE WORK!</h1><button id='playAgainButton' class='btn'>PLAY AGAIN</button> <button id='changeWordButton' class='btn'>CHANGE WORD</button>`;
+        result.innerHTML = `<h1>NICE WORK!</h1><button id='playAgainButton' class='btn'>PLAY AGAIN</button> <button id='changeWordButton' class='btn'>CHANGE PARAMS</button>`;
         clearInterval(countDown);
         document
             .querySelector('#playAgainButton')
