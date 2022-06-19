@@ -5,7 +5,7 @@
 
 pub mod database;
 pub mod structs;
-use database::{insert_record, remove_record, unique_types, unique_groups, unique_lengths, get_words};
+use database::*;
 use structs::Word;
 
 use rusqlite::{Result};
@@ -13,7 +13,8 @@ use rusqlite::{Result};
 fn main() -> Result<()> {    
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            kill_app, find_uniques, find_groups, find_lengths, generate_word, add_word, remove_word
+            kill_app, find_uniques, find_groups, find_lengths, generate_word, 
+            add_word, remove_word,
             ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -48,9 +49,9 @@ fn generate_word(word_type: String, group: String, length: String, language: Str
 
 #[tauri::command]
 fn add_word(word: String, language: String, type_: String, group: String) {
-    println!("Adding word: {}", word);
     let size = word.chars().count() as i32;
-    insert_record(Word{
+
+    insert_word(Word{
         word: word,
         language: language,
         type_: type_,
@@ -61,5 +62,5 @@ fn add_word(word: String, language: String, type_: String, group: String) {
 
 #[tauri::command]
 fn remove_word(word: String) {
-    remove_record(word).unwrap();
+    vanish_word(word).unwrap();
 }

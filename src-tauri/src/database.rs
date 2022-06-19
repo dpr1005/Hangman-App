@@ -2,19 +2,29 @@ use rusqlite::{Connection, Result};
 
 use crate::structs::Word;
 
-pub fn insert_record(record: Word) -> Result<()> {
+pub fn insert_word(record: Word) -> Result<(), ()> {
     let size = record.word.len() as i32;
+
+    let langs_in_db = get_unique_langs().unwrap();
+    let types_in_db = get_unique_types(record.language.clone()).unwrap();
+
+    if !langs_in_db.contains(&record.language) {        
+        insert_lang(record.language.clone()).unwrap();
+    }
+
+    if !types_in_db.contains(&record.type_) {
+        insert_type(record.type_.clone(), record.language.clone()).unwrap();
+    }
+
     let conn: Connection = Connection::open("database.sqlite").unwrap();
-   
-    conn.execute(
-        "INSERT INTO words (word, language, type, group_, size) VALUES (?1, ?2, ?3, ?4, ?5)",
-        &[&record.word, &record.language, &record.type_, &record.group, &size.to_string()],
-    )?;
-    print!("DONE");
+
+    let mut stmt = conn.prepare("INSERT INTO words (word, language, type, group_, size) VALUES (?1, ?2, ?3, ?4, ?5)");
+    stmt.execute(&[&record.word, &record.language, &record.type_, &record.group, &size.to_string()]);
+    
     Ok(())
 }
 
-pub fn remove_record(record: String) -> Result<()> {
+pub fn vanish_word(record: String) -> Result<()> {
     let conn: Connection = Connection::open("database.sqlite").unwrap();
 
     conn.execute(
@@ -139,4 +149,68 @@ pub fn get_words(type_: String, group_: String, length: String, lang: String) ->
     }
 
     Ok(words)
+}
+
+pub fn get_unique_types(lang: String) -> Result<Vec<String>> {
+    let conn: Connection = Connection::open("database.sqlite").unwrap();
+
+    let mut stmt = conn.prepare("SELECT DISTINCT type FROM words WHERE language = $1").unwrap();
+    let mut rows = stmt.query(&[&lang])?;
+
+    let mut types = Vec::new();
+    while let Some(row) = rows.next()? {
+        types.push(row.get(0)?);
+    }
+
+    Ok(types)
+}
+
+pub fn get_unique_langs() -> Result<Vec<String>> {
+    let conn: Connection = Connection::open("database.sqlite").unwrap();
+
+    let mut stmt = conn.prepare("SELECT DISTINCT language FROM languages").unwrap();
+    let mut rows = stmt.query([])?;
+
+    let mut languages = Vec::new();
+    while let Some(row) = rows.next()? {
+        languages.push(row.get(0)?);
+    }
+
+    Ok(languages)
+}
+
+fn insert_type(type_: String, lang: String) -> Result<(), ()> {
+    let conn: Connection = Connection::open("database.sqlite").unwrap();
+    
+    let mut stmt = conn.prepare("INSERT INTO types (type, language) VALUES ($1, $2)").unwrap();
+    stmt.execute(&[&type_, &lang]);
+
+    Ok(())
+}
+
+pub fn remove_type(type_: String, lang: String) -> Result<()> {
+    let conn: Connection = Connection::open("database.sqlite").unwrap();
+
+    let mut stmt = conn.prepare("DELETE FROM types WHERE type = $1 AND language = $2").unwrap();
+    stmt.execute(&[&type_, &lang])?;
+
+    Ok(())
+}
+
+fn insert_lang(lang: String) -> Result<(), ()> {
+    let conn: Connection = Connection::open("database.sqlite").unwrap();
+
+    let mut stmt = conn.prepare("INSERT INTO languages (language) VALUES ($1)").unwrap();
+    stmt.execute(&[&lang]);
+    
+    Ok(())
+}
+
+pub fn remove_lang(lang: String) -> Result<()> {
+    let conn: Connection = Connection::open("database.sqlite").unwrap();
+
+    let mut stmt = conn.prepare("DELETE FROM languages WHERE language = $1").unwrap();
+    stmt.execute(&[&lang])?;
+
+    Ok(())
 }
