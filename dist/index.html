@@ -54,4 +54,11 @@
   <footer>
   </footer>
   <script src="static/js/exit.js"></script>
+  <script>
+    let language = localStorage.getItem("language");
+    if (language == 'undefined' || language == null) {
+      language = 'EN';
+      localStorage.setItem('language', language);
+    }
+  </script>
 </html>

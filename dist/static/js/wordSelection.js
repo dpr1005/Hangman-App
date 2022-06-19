@@ -29,29 +29,34 @@ function addOptionsToSelect(selectId, options) {
 }
 
 function findWordTypes() {
-    invoke('find_uniques')
-        .then(function (result) {
-            addOptionsToSelect('wordTypeSelect', result);
-        })
-        .catch(e => {
-            alert('There was an error while finding the word types');
-        });
+    invoke('find_uniques', {
+        language: localStorage.getItem('language')
+    })
+    .then(function (result) {
+        addOptionsToSelect('wordTypeSelect', result);
+    })
+    .catch(e => {
+        alert('There was an error while finding the word types');
+    });
 }
 
 function findWordGroups() {
-    invoke('find_groups')
-        .then(function (result) {
-            addOptionsToSelect('wordGroupSelect', result);
-        })
-        .catch(e => {
-            alert('There was an error while finding the word groups');
-        });
+    invoke('find_groups', {
+        language: localStorage.getItem('language')
+    })
+    .then(function (result) {
+        addOptionsToSelect('wordGroupSelect', result);
+    })
+    .catch(e => {
+        alert('There was an error while finding the word groups');
+    });
 }
 
 function findWordsLength() {
     invoke('find_lengths', {
         wordType: document.getElementById('wordTypeSelect').value,
-        group: document.getElementById('wordGroupSelect').value
+        group: document.getElementById('wordGroupSelect').value,
+        language: localStorage.getItem('language')
     })
     .then(function (result) {
         addOptionsToSelect('wordLengthSelect', result);
@@ -66,7 +71,8 @@ function generateWord() {
     invoke('generate_word', {
         wordType: document.getElementById('wordTypeSelect').value,
         group: document.getElementById('wordGroupSelect').value,
-        length: document.getElementById('wordLengthSelect').value
+        length: document.getElementById('wordLengthSelect').value,
+        language: localStorage.getItem('language')
     })
     .then(function (result) {
         if (result.length > 0) {
