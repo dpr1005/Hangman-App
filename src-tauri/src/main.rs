@@ -27,23 +27,23 @@ fn kill_app() {
 }
 
 #[tauri::command]
-fn find_uniques() -> Vec<String>{
-    return unique_types().unwrap();
+fn find_uniques(language: String) -> Vec<String>{
+    return unique_types(language).unwrap();
 }
 
 #[tauri::command]
-fn find_groups () -> Vec<String>{
-    return unique_groups().unwrap();
+fn find_groups (language: String) -> Vec<String>{
+    return unique_groups(language).unwrap();
 }
 
 #[tauri::command]
-fn find_lengths(word_type: String, group: String) -> Vec<i32>{
-    return unique_lengths(word_type, group).unwrap();
+fn find_lengths(word_type: String, group: String, language: String) -> Vec<i32>{
+    return unique_lengths(word_type, group, language).unwrap();
 }
 
 #[tauri::command]
-fn generate_word(word_type: String, group: String, length: String) -> Vec<String>{
-    return get_words(word_type, group, length).unwrap();
+fn generate_word(word_type: String, group: String, length: String, language: String) -> Vec<String>{
+    return get_words(word_type, group, length, language).unwrap();
 }
 
 #[tauri::command]
