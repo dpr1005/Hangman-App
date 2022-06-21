@@ -54,13 +54,56 @@
                         <button type="submit" class="btn btn-primary">Add new word</button>
                     </form>
                 </div>
-                <hr class="my-4" width="100%">
-                <!-- TODO: List all words in DB, in order. Each one of them is a button. Once clicked a modal will ask for word deletion or not -->
+                <hr class="my-4" width="100%"><br><hr class="my-4" width="100%">
+                <div class="row">
+                    <label for="removeWord">
+                        <h2>Remove an existing word from the database</h2>
+                    </label>
+                    <br>
+                    <form name="removeWordForm" id="removeWordForm" onsubmit="alert('Palabra borrada')" required>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="wordLanguage">Language</label>
+                                <select class="form-select form-select-md mb-3" id="languagesSelect"
+                                    name="languagesSelect" onchange="updateTypeGroup(); findWords()" required>
+                                    <option value="" selected>Select language</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="wordType">Type</label>
+                                <select class="form-select form-select-md mb-3" id="typesSelect"
+                                    name="typesSelect" onchange="findWords()" required>
+                                    <option value="" selected>Select word type</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="wordGroup">Group</label>
+                                <select class="form-select form-select-md mb-3" id="groupsSelect"
+                                    name="groupsSelect" onchange="findWords()" required>
+                                    <option value="" selected>Select word group</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <label for="wordToRemove">Word</label>
+                                <select class="form-select form-select-md mb-3" id="wordToRemove" name="wordToRemove"
+                                    required>
+                                    <option value="" selected>Select word to delete</option>
+                                </select>
+                                <button type="submit" id="deleteWordButton" class="btn btn-primary" disabled>Delete word</button>
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>            
+                    </form>
+                </div>
             </div>
         </div>
         <a href="gameNewLoad.html">Back to New Game or Edit Database</a>
     </main>
 </body>
+<script src="static/js/general.js"></script>
 <script src="static/js/editDB.js"></script>
 <script>
     function checkNewWord() {
@@ -72,5 +115,14 @@
 
         addWordToDB(word, language, type_, group);
     }
-</script>
+
+    function updateTypeGroup() {
+        let language = document.forms['removeWordForm'].elements["languagesSelect"].value.toUpperCase();
+        
+        getFromDB('get_types', 'typesSelect', 'types', {lang: language});
+        getFromDB('get_groups', 'groupsSelect', 'groups', {lang: language});
+    }
+
+    getFromDB('get_languages', 'languagesSelect', 'languages');
+    </script>
 </html>

@@ -19,7 +19,47 @@ function addWordToDB(word, lang, type_, group) {
         .then((result) => {
             alert('Word added to DB');
         })
-        .error((err) => {
+        .catch((err) => {
             alert('Error adding word to DB');
         });
+}
+
+function getFromDB(func, select, thing, options={}) {
+    invoke(func, options)
+        .then((result) => {
+            addOptionsToSelect(select, result, thing === 'languages' ? false : true);
+        })
+        .catch((err) => {
+            alert('Error getting ' + thing + ' from the DB');
+        });
+}
+
+function findWords() {
+    let form = document.forms['removeWordForm'];
+    let lang = form.elements['languagesSelect'].value.toUpperCase();
+    let type = form.elements['typesSelect'].value;
+    let group = form.elements['groupsSelect'].value;
+    console.log(lang, type, group)
+
+    if (lang != "" && type != "" && group != "") {
+        invoke('generate_word', {
+            wordType: type,
+            group: group,
+            length: "all",
+            language: lang
+        })
+        .then((result) => {
+            console.log(result)
+            addOptionsToSelect('wordToRemove', result, false);
+            if (result.length > 0) {
+                document.getElementById('deleteWordButton').disabled = false;
+            }
+        })
+        .catch((err) => {
+            alert('Error getting the matching words from the DB');
+            document.getElementById('deleteWordButton').disabled = true;
+        })
+    } else {
+        document.getElementById('deleteWordButton').disabled = true;
+    }
 }
