@@ -19,9 +19,10 @@ pub fn insert_word(record: Word) -> Result<()> {
 
     let conn: Connection = Connection::open(DB_PATH).unwrap();
 
-    match conn.execute("INSERT INTO words (word, language, type, group_, size) VALUES (?1, ?2, ?3, ?4, ?5)", &[&record.word, &record.language, &record.type_, &record.group, &size.to_string()]) {
-        Ok(updated) => println!("{} rows were updated", updated),
-        Err(err) => println!("update failed: {:?}", err),
+    match conn.execute("INSERT INTO words (word, language, type, group_, size) VALUES (?1, ?2, ?3, ?4, ?5)", 
+    &[&record.word, &record.language, &record.type_, &record.group, &size.to_string()]) {
+        Ok(_updated) => (),
+        Err(err) => println!("Adding new word failed: {:?}", err),
     }
 
    close_connection(conn);
@@ -36,6 +37,8 @@ pub fn vanish_word(record: String) -> Result<()> {
         "DELETE FROM words WHERE word = ?1",
         &[&record],
     )?;
+
+    close_connection(conn);
 
     Ok(())
 }
@@ -189,7 +192,7 @@ fn insert_type(type_: String, lang: String) -> Result<(), ()> {
 
     match conn.execute("INSERT INTO types (type, language) VALUES (?1, ?2)", 
         &[&type_, &lang]) {
-            Ok(updated) => println!("{} rows were updated", updated),
+            Ok(_updated) => (),
             Err(err) => println!("update failed: {:?}", err),
         }
 
@@ -212,7 +215,7 @@ fn insert_lang(lang: String) -> Result<(), ()> {
     
      match conn.execute("INSERT INTO languages (language) VALUES (?1)", 
         &[&lang]) {
-            Ok(updated) => println!("{} rows were updated", updated),
+            Ok(_updated) => (),
             Err(err) => println!("update failed: {:?}", err),
         }
 
