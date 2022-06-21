@@ -4,5 +4,4 @@ pub struct Word {
     pub(crate) language:String,
     pub(crate) type_:String,
     pub(crate) group:String,
-    pub(crate) size:i32,
 }

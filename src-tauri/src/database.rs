@@ -1,8 +1,9 @@
 use rusqlite::{Connection, Result};
 
 use crate::structs::Word;
+use super::DB_PATH;
 
-pub fn insert_word(record: Word) -> Result<(), ()> {
+pub fn insert_word(record: Word) -> Result<()> {
     let size = record.word.len() as i32;
 
     let langs_in_db = get_unique_langs().unwrap();
@@ -16,16 +17,20 @@ pub fn insert_word(record: Word) -> Result<(), ()> {
         insert_type(record.type_.clone(), record.language.clone()).unwrap();
     }
 
-    let conn: Connection = Connection::open("database.sqlite").unwrap();
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
 
-    let mut stmt = conn.prepare("INSERT INTO words (word, language, type, group_, size) VALUES (?1, ?2, ?3, ?4, ?5)");
-    stmt.execute(&[&record.word, &record.language, &record.type_, &record.group, &size.to_string()]);
+    match conn.execute("INSERT INTO words (word, language, type, group_, size) VALUES (?1, ?2, ?3, ?4, ?5)", &[&record.word, &record.language, &record.type_, &record.group, &size.to_string()]) {
+        Ok(updated) => println!("{} rows were updated", updated),
+        Err(err) => println!("update failed: {:?}", err),
+    }
+
+   close_connection(conn);
     
     Ok(())
 }
 
 pub fn vanish_word(record: String) -> Result<()> {
-    let conn: Connection = Connection::open("database.sqlite").unwrap();
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
 
     conn.execute(
         "DELETE FROM words WHERE word = ?1",
@@ -36,7 +41,7 @@ pub fn vanish_word(record: String) -> Result<()> {
 }
 
 pub fn unique_types(lang: String) -> Result<Vec<String>> {
-    let conn: Connection = Connection::open("database.sqlite").unwrap();
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
 
     let mut stmt = conn.prepare("SELECT DISTINCT type FROM words WHERE language = $1").unwrap();
     let mut rows = stmt.query(&[&lang])?;
@@ -50,7 +55,7 @@ pub fn unique_types(lang: String) -> Result<Vec<String>> {
 }
 
 pub fn unique_groups(lang: String) -> Result<Vec<String>> {
-    let conn: Connection = Connection::open("database.sqlite").unwrap();
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
 
     let mut stmt = conn.prepare("SELECT DISTINCT group_ FROM words WHERE language = $1").unwrap();
     let mut rows = stmt.query(&[&lang])?;
@@ -64,7 +69,7 @@ pub fn unique_groups(lang: String) -> Result<Vec<String>> {
 }
 
 pub fn unique_lengths(type_: String, group_: String, lang: String) -> Result<Vec<i32>> {
-    let conn: Connection = Connection::open("database.sqlite").unwrap();
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
     let query;
     let mut stmt;
     let mut rows;
@@ -99,7 +104,7 @@ pub fn unique_lengths(type_: String, group_: String, lang: String) -> Result<Vec
 
 
 pub fn get_words(type_: String, group_: String, length: String, lang: String) -> Result<Vec<String>> {
-    let conn: Connection = Connection::open("database.sqlite").unwrap();
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
     let mut query: String = "".to_owned();
     let mut stmt;
     let mut rows;
@@ -152,7 +157,7 @@ pub fn get_words(type_: String, group_: String, length: String, lang: String) ->
 }
 
 pub fn get_unique_types(lang: String) -> Result<Vec<String>> {
-    let conn: Connection = Connection::open("database.sqlite").unwrap();
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
 
     let mut stmt = conn.prepare("SELECT DISTINCT type FROM words WHERE language = $1").unwrap();
     let mut rows = stmt.query(&[&lang])?;
@@ -166,7 +171,7 @@ pub fn get_unique_types(lang: String) -> Result<Vec<String>> {
 }
 
 pub fn get_unique_langs() -> Result<Vec<String>> {
-    let conn: Connection = Connection::open("database.sqlite").unwrap();
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
 
     let mut stmt = conn.prepare("SELECT DISTINCT language FROM languages").unwrap();
     let mut rows = stmt.query([])?;
@@ -180,16 +185,21 @@ pub fn get_unique_langs() -> Result<Vec<String>> {
 }
 
 fn insert_type(type_: String, lang: String) -> Result<(), ()> {
-    let conn: Connection = Connection::open("database.sqlite").unwrap();
-    
-    let mut stmt = conn.prepare("INSERT INTO types (type, language) VALUES ($1, $2)").unwrap();
-    stmt.execute(&[&type_, &lang]);
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
+
+    match conn.execute("INSERT INTO types (type, language) VALUES (?1, ?2)", 
+        &[&type_, &lang]) {
+            Ok(updated) => println!("{} rows were updated", updated),
+            Err(err) => println!("update failed: {:?}", err),
+        }
+
+    close_connection(conn);
 
     Ok(())
 }
 
 pub fn remove_type(type_: String, lang: String) -> Result<()> {
-    let conn: Connection = Connection::open("database.sqlite").unwrap();
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
 
     let mut stmt = conn.prepare("DELETE FROM types WHERE type = $1 AND language = $2").unwrap();
     stmt.execute(&[&type_, &lang])?;
@@ -198,19 +208,31 @@ pub fn remove_type(type_: String, lang: String) -> Result<()> {
 }
 
 fn insert_lang(lang: String) -> Result<(), ()> {
-    let conn: Connection = Connection::open("database.sqlite").unwrap();
-
-    let mut stmt = conn.prepare("INSERT INTO languages (language) VALUES ($1)").unwrap();
-    stmt.execute(&[&lang]);
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
     
+     match conn.execute("INSERT INTO languages (language) VALUES (?1)", 
+        &[&lang]) {
+            Ok(updated) => println!("{} rows were updated", updated),
+            Err(err) => println!("update failed: {:?}", err),
+        }
+
+    close_connection(conn);
+
     Ok(())
 }
 
 pub fn remove_lang(lang: String) -> Result<()> {
-    let conn: Connection = Connection::open("database.sqlite").unwrap();
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
 
     let mut stmt = conn.prepare("DELETE FROM languages WHERE language = $1").unwrap();
     stmt.execute(&[&lang])?;
 
     Ok(())
+}
+
+fn close_connection(conn: Connection) {
+    match conn.close() {
+        Ok(()) => (),
+        Err(err) => println!("Connection close failed: {:?}", err),
+    }
 }

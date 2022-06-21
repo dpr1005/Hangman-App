@@ -10,6 +10,8 @@ use structs::Word;
 
 use rusqlite::{Result};
 
+static DB_PATH: &'static str = "../database/database.sqlite";
+
 fn main() -> Result<()> {    
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -49,14 +51,11 @@ fn generate_word(word_type: String, group: String, length: String, language: Str
 
 #[tauri::command]
 fn add_word(word: String, language: String, type_: String, group: String) {
-    let size = word.chars().count() as i32;
-
     insert_word(Word{
         word: word,
         language: language,
         type_: type_,
         group: group,
-        size: size,
     }).unwrap();
 }
 
