@@ -15,8 +15,8 @@ static DB_PATH: &'static str = "../database/database.sqlite";
 fn main() -> Result<()> {    
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            kill_app, find_uniques, find_groups, find_lengths, generate_word, 
-            add_word, remove_word,
+            kill_app, find_lengths, generate_word, 
+            add_word, remove_word, get_languages, get_types, get_groups
             ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -27,16 +27,6 @@ fn main() -> Result<()> {
 #[tauri::command]
 fn kill_app() {
     panic!("Killing app...");
-}
-
-#[tauri::command]
-fn find_uniques(language: String) -> Vec<String>{
-    return unique_types(language).unwrap();
-}
-
-#[tauri::command]
-fn find_groups (language: String) -> Vec<String>{
-    return unique_groups(language).unwrap();
 }
 
 #[tauri::command]
@@ -62,4 +52,19 @@ fn add_word(word: String, language: String, type_: String, group: String) {
 #[tauri::command]
 fn remove_word(word: String) {
     vanish_word(word).unwrap();
+}
+
+#[tauri::command]
+fn get_languages() -> Vec<String> {
+    return get_unique_langs().unwrap();
+}
+
+#[tauri::command]
+fn get_types(lang: String) -> Vec<String> {
+    return get_unique_types(lang).unwrap();
+}
+
+#[tauri::command]
+fn get_groups(lang: String) -> Vec<String> {
+    return get_unique_groups(lang).unwrap();
 }

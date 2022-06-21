@@ -187,6 +187,20 @@ pub fn get_unique_langs() -> Result<Vec<String>> {
     Ok(languages)
 }
 
+pub fn get_unique_groups(lang: String) -> Result<Vec<String>> {
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
+
+    let mut stmt = conn.prepare("SELECT DISTINCT group_ FROM words WHERE language = $1").unwrap();
+    let mut rows = stmt.query(&[&lang])?;
+
+    let mut groups = Vec::new();
+    while let Some(row) = rows.next()? {
+        groups.push(row.get(0)?);
+    }
+
+    Ok(groups)
+}
+
 fn insert_type(type_: String, lang: String) -> Result<(), ()> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
 
