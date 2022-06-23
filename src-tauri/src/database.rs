@@ -30,12 +30,12 @@ pub fn insert_word(record: Word) -> Result<()> {
     Ok(())
 }
 
-pub fn vanish_word(record: String) -> Result<()> {
+pub fn remove_word_(word: String, lang: String) -> Result<()> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
 
     conn.execute(
-        "DELETE FROM words WHERE word = ?1",
-        &[&record],
+        "DELETE FROM words WHERE word = ?1 AND language = ?2",
+        &[&word, &lang],
     )?;
 
     close_connection(conn);
@@ -43,35 +43,7 @@ pub fn vanish_word(record: String) -> Result<()> {
     Ok(())
 }
 
-pub fn unique_types(lang: String) -> Result<Vec<String>> {
-    let conn: Connection = Connection::open(DB_PATH).unwrap();
-
-    let mut stmt = conn.prepare("SELECT DISTINCT type FROM words WHERE language = $1").unwrap();
-    let mut rows = stmt.query(&[&lang])?;
-
-    let mut types = Vec::new();
-    while let Some(row) = rows.next()? {
-        types.push(row.get(0)?);
-    }
-
-    Ok(types)
-}
-
-pub fn unique_groups(lang: String) -> Result<Vec<String>> {
-    let conn: Connection = Connection::open(DB_PATH).unwrap();
-
-    let mut stmt = conn.prepare("SELECT DISTINCT group_ FROM words WHERE language = $1").unwrap();
-    let mut rows = stmt.query(&[&lang])?;
-
-    let mut groups = Vec::new();
-    while let Some(row) = rows.next()? {
-        groups.push(row.get(0)?);
-    }
-
-    Ok(groups)
-}
-
-pub fn unique_lengths(type_: String, group_: String, lang: String) -> Result<Vec<i32>> {
+pub fn get_unique_lengths(type_: String, group_: String, lang: String) -> Result<Vec<i32>> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
     let query;
     let mut stmt;
@@ -215,15 +187,6 @@ fn insert_type(type_: String, lang: String) -> Result<(), ()> {
     Ok(())
 }
 
-pub fn remove_type(type_: String, lang: String) -> Result<()> {
-    let conn: Connection = Connection::open(DB_PATH).unwrap();
-
-    let mut stmt = conn.prepare("DELETE FROM types WHERE type = $1 AND language = $2").unwrap();
-    stmt.execute(&[&type_, &lang])?;
-
-    Ok(())
-}
-
 fn insert_lang(lang: String) -> Result<(), ()> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
     
@@ -241,8 +204,35 @@ fn insert_lang(lang: String) -> Result<(), ()> {
 pub fn remove_lang(lang: String) -> Result<()> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
 
-    let mut stmt = conn.prepare("DELETE FROM languages WHERE language = $1").unwrap();
+    let mut stmt = conn.prepare("DELETE FROM words WHERE language = $1").unwrap();
     stmt.execute(&[&lang])?;
+
+    stmt = conn.prepare("DELETE FROM types WHERE language = $1").unwrap();
+    stmt.execute(&[&lang])?;
+
+    stmt = conn.prepare("DELETE FROM languages WHERE language = $1").unwrap();
+    stmt.execute(&[&lang])?;
+
+    Ok(())
+}
+
+pub fn remove_type_(type_: String, lang: String) -> Result<()> {
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
+
+    let mut stmt = conn.prepare("DELETE FROM words WHERE type = $1 AND language = $2").unwrap();
+    stmt.execute(&[&type_, &lang])?;
+
+    stmt = conn.prepare("DELETE FROM types WHERE type = $1 AND language = $2").unwrap();
+    stmt.execute(&[&type_, &lang])?;
+
+    Ok(())
+}
+
+pub fn remove_group_(group_: String, lang: String) -> Result<()> {
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
+
+    let mut stmt = conn.prepare("DELETE FROM words WHERE group_ = $1 AND language = $2").unwrap();
+    stmt.execute(&[&group_, &lang])?;
 
     Ok(())
 }

@@ -16,7 +16,8 @@ fn main() -> Result<()> {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             kill_app, find_lengths, generate_word, 
-            add_word, remove_word, get_languages, get_types, get_groups
+            add_word, remove_word, get_languages, get_types, get_groups,
+            remove_language, remove_type, remove_group,
             ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -31,7 +32,7 @@ fn kill_app() {
 
 #[tauri::command]
 fn find_lengths(word_type: String, group: String, language: String) -> Vec<i32>{
-    return unique_lengths(word_type, group, language).unwrap();
+    return get_unique_lengths(word_type, group, language).unwrap();
 }
 
 #[tauri::command]
@@ -50,8 +51,8 @@ fn add_word(word: String, language: String, type_: String, group: String) {
 }
 
 #[tauri::command]
-fn remove_word(word: String) {
-    vanish_word(word).unwrap();
+fn remove_word(word: String, lang: String) {
+    remove_word_(word, lang).unwrap();
 }
 
 #[tauri::command]
@@ -67,4 +68,19 @@ fn get_types(lang: String) -> Vec<String> {
 #[tauri::command]
 fn get_groups(lang: String) -> Vec<String> {
     return get_unique_groups(lang).unwrap();
+}
+
+#[tauri::command]
+fn remove_language(lang: String) {
+    remove_lang(lang).unwrap();
+}
+
+#[tauri::command]
+fn remove_type(type_: String, lang: String) {
+    remove_type_(type_, lang).unwrap();
+}
+
+#[tauri::command]
+fn remove_group(group: String, lang: String) {
+    remove_group_(group, lang).unwrap();
 }
