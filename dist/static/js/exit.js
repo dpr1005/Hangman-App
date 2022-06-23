@@ -7,10 +7,10 @@ function exitApp() {
         });
 }
 
-const killButtonSi = document.querySelector("#killButtonSi");
+const killButtonYes = document.querySelector("#killButtonYes");
 const killButtonNo = document.querySelector("#killButtonNo");
 
-killButtonSi.addEventListener("click", () => {
+killButtonYes.addEventListener("click", () => {
     exitApp();
 });
 
@@ -22,6 +22,12 @@ const newGameButton = document.querySelector("#newGameButton");
 
 newGameButton.addEventListener("click", () => {
     window.location.href = "gameNewLoad.html";
+});
+
+const settingsButton = document.querySelector("#SettingsButton");
+
+settingsButton.addEventListener("click", () => {
+    window.location.href = "settings.html";
 });
 
 let modalBtn = document.getElementById("killButtonModal");

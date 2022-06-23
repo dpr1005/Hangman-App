@@ -25,3 +25,23 @@ function addOptionsToSelect(selectId, options, all=true) {
         select.appendChild(option);
     }    
 }
+
+function getFromDB(func, select, thing, options = {}) {
+    invoke(func, options)
+        .then((result) => {
+            addOptionsToSelect(select, result, thing === 'languages' ? false : true);
+        })
+        .catch((err) => {
+            alert('Error getting ' + thing + ' from the DB');
+        });
+}
+
+function removeFromDB(func, options = {}) {
+    invoke(func, options)
+        .then(() => {
+            alert('Successfully removed from the Database');
+        })
+        .catch((err) => {
+            alert('Error performing the operation');
+        });
+}

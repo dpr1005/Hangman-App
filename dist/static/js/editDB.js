@@ -24,16 +24,6 @@ function addWordToDB(word, lang, type_, group) {
         });
 }
 
-function getFromDB(func, select, thing, options={}) {
-    invoke(func, options)
-        .then((result) => {
-            addOptionsToSelect(select, result, thing === 'languages' ? false : true);
-        })
-        .catch((err) => {
-            alert('Error getting ' + thing + ' from the DB');
-        });
-}
-
 function findWords() {
     let form = document.forms['removeWordForm'];
     let lang = form.elements['languagesSelect'].value.toUpperCase();
@@ -63,3 +53,28 @@ function findWords() {
         document.getElementById('deleteWordButton').disabled = true;
     }
 }
+
+function deleteWord() {
+    let form = document.forms['removeWordForm'];
+    let word = form.elements['wordToRemove'].value;
+    let lang = form.elements['languagesSelect'].value.toUpperCase();
+    let type = form.elements['typesSelect'].value;
+    let group = form.elements['groupsSelect'].value;
+
+    console.log(lang, type, group, word);
+
+    invoke('remove_word', {
+        word: word,
+        lang: lang,
+        type: type,
+        group: group
+    })
+        .then((result) => {
+            alert('Word deleted from DB');
+        })
+        .catch((err) => {
+            alert('Error deleting word from DB');
+        });
+    }
+
+

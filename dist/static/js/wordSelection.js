@@ -2,7 +2,7 @@ const invoke = window.__TAURI__.invoke;
 
 function findWordTypes() {
     invoke('get_types', {
-        lang: localStorage.getItem('language')
+        lang: document.getElementById('languagesSelect').value
     })
     .then(function (result) {
         addOptionsToSelect('wordTypeSelect', result);
@@ -14,7 +14,7 @@ function findWordTypes() {
 
 function findWordGroups() {
     invoke('get_groups', {
-        lang: localStorage.getItem('language')
+        lang: document.getElementById('languagesSelect').value
     })
     .then(function (result) {
         addOptionsToSelect('wordGroupSelect', result);
@@ -28,7 +28,7 @@ function findWordsLength() {
     invoke('find_lengths', {
         wordType: document.getElementById('wordTypeSelect').value,
         group: document.getElementById('wordGroupSelect').value,
-        language: localStorage.getItem('language')
+        lang: document.getElementById('languagesSelect').value
     })
     .then(function (result) {
         addOptionsToSelect('wordLengthSelect', result);
@@ -44,7 +44,7 @@ function generateWord() {
         wordType: document.getElementById('wordTypeSelect').value,
         group: document.getElementById('wordGroupSelect').value,
         length: document.getElementById('wordLengthSelect').value,
-        language: localStorage.getItem('language')
+        lang: document.getElementById('languagesSelect').value
     })
     .then(function (result) {
         if (result.length > 0) {

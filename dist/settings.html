@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark light">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/css/default.css">
+    <link rel="stylesheet" href="static/css/settings_modal.css">
+    <link rel="stylesheet" href="static/css/darkLightMode.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+        integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+        integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous">
+    </script>
+    <script src="static/js/darkLightModeSwitch.js"></script>
+</head>
+
+<body id="body" onload="darkMode()">
+    <main>
+        <div class="d-flex align-items-center min-vh-100">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-4"></div>
+                    <div class="col-4">
+                        <form name="App language" onsubmit="alert('Feature to be implemented, sorry.')">
+                            <label for="language">App language</label>
+                            <select class="form-control" id="language">
+                                <option value="en">English</option>
+                                <option value="de">Dutch</option>
+                                <option value="fr">Français</option>
+                                <option value="es">Español</option>
+                            </select>
+                            <br>
+                            <button type="submit" class="btn btn-primary">Update language</button>
+                        </form>
+                    </div>
+                    <div class="col-4"></div>  
+                </div>
+                <hr class="my-4" width="100%"><br>
+                <hr class="my-4" width="100%">
+                <div class="row">
+                    <h4>Remove from the database</h4>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="removeLanguage">Remove Language</label>
+                            <select class="form-select form-select-md mb-3" id="removeLanguage"
+                                name="removeLanguage" onchange="updateTypeGroup(); checkLanguageUpdate()" required>
+                                <option value="" selected>Select language</option>
+                            </select>
+                            <button id="removeLanguageButton" type="submit" class="btn btn-primary" disabled>
+                                Remove language</button>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="removeType">Remove Type</label>
+                            <select class="form-select form-select-md mb-3" id="removeType" name="removeType"
+                                onchange="checkTypeUpdate()" required>
+                                <option value="" selected>Select type</option>
+                            </select>
+                            <button id="removeTypeButton" type="submit" class="btn btn-primary" disabled>
+                                Remove type</button>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="removeGroup">Remove Group</label>
+                            <select class="form-select form-select-md mb-3" id="removeGroup" name="removeGroup"
+                                onchange="checkGroupUpdate()" required>
+                                <option value="" selected>Select group</option>
+                            </select>
+                            <button id="removeGroupButton" type="submit" class="btn btn-primary" disabled>
+                                Remove group</button>
+                        </div>
+                    </div>
+                </div>
+                <hr class="my-4" width="100%"><br>
+                <hr class="my-4" width="100%">
+                <div class="row">
+                    <div class="col-4"></div>
+                    <div class="col-4">
+                        <label for="Reset database"><h4>Danger</h4></label>
+                        <br>
+                        <button id="resetDatabaseButton" type="submit" class="btn btn-danger">Reset database to its original state</button>
+                    </div>
+                    <div class="col-4"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <div class="text-center">
+                    <h4>Are you sure? Do you REALLY want to reset the database?</h4>
+                    This process CAN NOT be undone.
+                </div>
+                <div class="flex-row text-center">
+                    <button id="resetButtonYes" class="btn btn-success btn-lg btn-block"> Yes </button>
+                    <button id="resetButtonNo" class="btn btn-danger btn-lg btn-block"> No </button>
+                </div>
+            </div>
+        </div>
+        <div id="prompt-form-container">
+            <form id="prompt-form">
+                <div id="prompt-message"></div>
+                <input name="text" type="text">
+                <input type="submit" value="Delete">
+                <input type="button" name="cancel" value="Cancel">
+            </form>
+        </div>
+        <a href="index.html">Main Menu</a>
+    </main>
+</body>
+<script src="static/js/general.js"></script> 
+<script src="static/js/settings.js"></script>
+<script>
+    getFromDB('get_languages', 'removeLanguage', 'languages');
+
+    function updateTypeGroup() {
+        let language = document.getElementById('removeLanguage').value.toUpperCase();
+
+        getFromDB('get_types', 'removeType', 'types', {lang: language});
+        getFromDB('get_groups', 'removeGroup', 'groups', {lang: language});
+    }
+
+    function checkLanguageUpdate(allow=true) {
+        let language = document.getElementById('removeLanguage').value.toUpperCase();
+        if (language == '') {
+            document.getElementById('removeLanguageButton').disabled = true;
+            document.getElementById('removeTypeButton').disabled = true;
+            document.getElementById('removeGroupButton').disabled = true;
+            return false;
+        } 
+        if (allow) {
+            document.getElementById('removeLanguageButton').disabled = false;
+            if (document.getElementById('removeType').value.toUpperCase() == '') {
+                document.getElementById('removeTypeButton').disabled = true;
+            } else {
+                document.getElementById('removeTypeButton').disabled = false;
+            }
+            if (document.getElementById('removeGroup').value.toUpperCase() == '') {
+                document.getElementById('removeGroupButton').disabled = true;
+            } else {
+                document.getElementById('removeGroupButton').disabled = false;
+            }
+        }
+        return true;
+    }
+    
+    function checkTypeUpdate(allow=true) {
+        if (!checkLanguageUpdate(false)) {
+            return false;
+        }
+
+        let type = document.getElementById('removeType').value.toUpperCase();
+        if (type == '') {
+            document.getElementById('removeTypeButton').disabled = true;
+            return false;
+        }
+        if (allow) {
+            document.getElementById('removeTypeButton').disabled = false;
+        }
+        return true;
+    }
+
+    function checkGroupUpdate(allow=true) {
+        if (!checkLanguageUpdate(false)) {
+            return false;
+        }
+
+        let group = document.getElementById('removeGroup').value.toUpperCase();
+        if (group == '') {
+            document.getElementById('removeGroupButton').disabled = true;
+            return false;
+        }
+        if (allow) {
+            document.getElementById('removeGroupButton').disabled = false;
+        }
+        return true;
+    }
+</script>
+<script>
+    function showCover() {
+        let coverDiv = document.createElement('div');
+        coverDiv.id = 'cover-div';
+
+        document.body.style.overflowY = 'hidden';
+
+        document.body.append(coverDiv);
+    }
+
+    function hideCover() {
+        document.getElementById('cover-div').remove();
+        document.body.style.overflowY = '';
+    }
+
+    function showPrompt(text, callback) {
+        showCover();
+        let form = document.getElementById('prompt-form');
+        let container = document.getElementById('prompt-form-container');
+        document.getElementById('prompt-message').innerHTML = text;
+        form.text.value = '';
+
+        function complete(value, completed) {
+            hideCover();
+            container.style.display = 'none';
+            document.onkeydown = null;
+            callback(value, completed);
+        }
+
+        form.onsubmit = function () {
+            let value = form.text.value;
+            if (value == '') return false; 
+
+            complete(value, true);
+            return false;
+        };
+
+        form.cancel.onclick = function () {
+            complete(null, false);
+        };
+
+        document.onkeydown = function (e) {
+            if (e.key == 'Escape') {
+                complete(null, false);
+            }
+        };
+
+        let lastElem = form.elements[form.elements.length - 1];
+        let firstElem = form.elements[0];
+
+        lastElem.onkeydown = function (e) {
+            if (e.key == 'Tab' && !e.shiftKey) {
+                firstElem.focus();
+                return false;
+            }
+        };
+
+        firstElem.onkeydown = function (e) {
+            if (e.key == 'Tab' && e.shiftKey) {
+                lastElem.focus();
+                return false;
+            }
+        };
+
+        container.style.display = 'block';
+        form.elements.text.focus();
+    }
+
+    document.getElementById('removeLanguageButton').onclick = function () {
+        let text = document.getElementById('removeLanguage').value;
+        showPrompt("Please type \""+text+"\" to confirm.", function (value, completed) {
+            if (completed) {
+                if (value == text) {
+                    removeFromDB('remove_language', {lang: text.toUpperCase()});
+                    getFromDB('get_languages', 'removeLanguage', 'languages');
+                    getFromDB('get_types', 'removeType', 'types', {lang: lang});
+                    getFromDB('get_groups', 'removeGroup', 'groups', {lang: lang});
+                } else {
+                    alert("You typed \""+value+"\" instead of \""+text+"\".\nOperation cancelled.");
+                }
+            }
+        });
+    };
+
+    
+    document.getElementById('removeTypeButton').onclick = function () {
+        let text = document.getElementById('removeType').value;
+        let lang = document.getElementById('removeLanguage').value.toUpperCase();
+        showPrompt("Please type \""+text+"\" to confirm.", function (value, completed) {
+            if (completed) {
+                if (value == text) {
+                    removeFromDB('remove_type', {type: text, lang: lang});
+                    getFromDB('get_types', 'removeType', 'types', {lang: lang});
+                } else {
+                    alert("You typed \""+value+"\" instead of \""+text+"\".\nOperation cancelled.");
+                }
+            }
+        });
+    };
+
+    document.getElementById('removeGroupButton').onclick = function () {
+        let text = document.getElementById('removeGroup').value;
+        let lang = document.getElementById('removeLanguage').value.toUpperCase();
+        showPrompt("Please type \""+text+"\" to confirm.", function (value, completed) {
+            if (completed) {
+                if (value == text) {
+                    removeFromDB('remove_group', {group: text, lang: lang});
+                    getFromDB('get_groups', 'removeGroup', 'groups', {lang:lang});
+                } else {
+                    alert("You typed \""+value+"\" instead of \""+text+"\".\nOperation cancelled.");
+                }
+            }
+        });
+    };
+</script>
+</html>

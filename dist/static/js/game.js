@@ -2,13 +2,11 @@ const tauriWindow = window.__TAURI__.window;
 
 let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const alphabet = document.getElementById('alphabet');
-let playingStored = JSON.parse(sessionStorage.getItem('playingWord'));
-
 let passwordBoard;
-if (Array.isArray(playingStored)) {
-    passwordBoard = playingStored;
-} else {
-    [playingWord];
+try {
+    passwordBoard = JSON.parse(sessionStorage.getItem('playingWord'));
+} catch (error) {
+    passwordBoard = [sessionStorage.getItem('playingWord')];
 }
 
 const maxTries = 7;

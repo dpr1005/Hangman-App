@@ -54,13 +54,14 @@
                         <button type="submit" class="btn btn-primary">Add new word</button>
                     </form>
                 </div>
-                <hr class="my-4" width="100%"><br><hr class="my-4" width="100%">
+                <hr class="my-4" width="100%"><br>
+                <hr class="my-4" width="100%">
                 <div class="row">
                     <label for="removeWord">
                         <h2>Remove an existing word from the database</h2>
                     </label>
                     <br>
-                    <form name="removeWordForm" id="removeWordForm" onsubmit="alert('Palabra borrada')" required>
+                    <form name="removeWordForm" id="removeWordForm" onsubmit="deleteWord()" required>
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="wordLanguage">Language</label>
@@ -123,6 +124,6 @@
         getFromDB('get_groups', 'groupsSelect', 'groups', {lang: language});
     }
 
-    getFromDB('get_languages', 'languagesSelect', 'languages');
+    getFromDB('get_languages', 'languagesSelect', 'languages', false);
     </script>
 </html>

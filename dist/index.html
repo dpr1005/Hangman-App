@@ -6,7 +6,7 @@
 	<meta name="color-scheme" content="dark light">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="static/css/default.css">
-    <link rel="stylesheet" href="static/css/modal.css">
+    <link rel="stylesheet" href="static/css/index_modal.css">
     <link rel="stylesheet" href="static/css/darkLightMode.css">
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
@@ -43,16 +43,14 @@
         <div class="modal-content">
           <span class="close-btn">&times;</span>
           <div class="text-center">
-            <h4>¿Seguro que quieres salir de la aplicación?</h4>
+            <h4>Do you want to exit the app?</h4>
           </div>
           <div class="flex-row text-center">
-            <button id="killButtonSi" class="btn btn-success btn-lg btn-block">    Si    </button>
+            <button id="killButtonYes" class="btn btn-success btn-lg btn-block">    Yes    </button>
             <button id="killButtonNo" class="btn btn-danger btn-lg btn-block">    No    </button>
         </div>
       </div>
   </body>
-  <footer>
-  </footer>
   <script src="static/js/exit.js"></script>
   <script>
     let language = localStorage.getItem("language");
