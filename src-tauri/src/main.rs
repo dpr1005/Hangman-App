@@ -11,13 +11,14 @@ use structs::Word;
 use rusqlite::{Result};
 
 static DB_PATH: &'static str = "../database/database.sqlite";
+static WORDS_CSV_PATH: &'static str = "../database/words.csv";
 
-fn main() -> Result<()> {    
+fn main() -> Result<()> {       
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             kill_app, find_lengths, generate_word, 
             add_word, remove_word, get_languages, get_types, get_groups,
-            remove_language, remove_type, remove_group,
+            remove_language, remove_type, remove_group, export_db
             ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -47,6 +48,7 @@ fn add_word(word: String, language: String, type_: String, group: String) {
         language: language,
         type_: type_,
         group: group,
+        size: "".to_string()
     }).unwrap();
 }
 
@@ -83,4 +85,9 @@ fn remove_type(type_: String, lang: String) {
 #[tauri::command]
 fn remove_group(group: String, lang: String) {
     remove_group_(group, lang).unwrap();
+}
+
+#[tauri::command]
+fn export_db() {
+    export_db_().unwrap();
 }

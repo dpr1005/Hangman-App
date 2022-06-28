@@ -1,4 +1,7 @@
 const invoke = window.__TAURI__.invoke;
+const readFile = window.__TAURI__.fs.readTextFile;
+const baseDir = window.__TAURI__.fs.BaseDirectory;
+import { readTextFile, BaseDirectory } from '@tauri-apps/api/fs';
 
 const resetButtonYes = document.querySelector("#resetButtonYes");
 const resetButtonNo = document.querySelector("#resetButtonNo");
@@ -32,3 +35,26 @@ window.onclick = function (e) {
         modal.style.display = "none"
     }
 }
+
+const exportDatabaseButton = document.querySelector("#exportDatabaseButton");
+const importDatabaseButton = document.querySelector("#importDatabaseButton");
+
+importDatabaseButton.addEventListener("click", () => {
+    importDatabase();
+});
+
+export function exportDatabase() {
+    invoke('export_db')
+        .then(() => {
+        })
+        .catch(e => {
+            alert('An error was encountered while exporting the database\n\n' + e);
+        });
+}
+
+exportDatabaseButton.addEventListener("click", () => {
+    
+});
+
+const contents = await readTextFile('database/words.csv', { dir: BaseDirectory.App });
+console.log(contents);

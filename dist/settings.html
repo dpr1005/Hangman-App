@@ -81,6 +81,24 @@
                 <hr class="my-4" width="100%"><br>
                 <hr class="my-4" width="100%">
                 <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col-3">
+                        <!--<form action="#" method="post">-->
+                            <label for="Export database">Export database</label>
+                            <br>
+                            <button id="exportDatabaseButton" type="submit" class="btn btn-danger">Export</button>
+                        <!--</form>-->
+                      </div>
+                    <div class="col-3">
+                        <label for="Import CSV of words">Import CSV of words</label>
+                        <br>
+                        <button id="importDatabaseButton" type="submit" class="btn btn-danger">Import</button>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+                <hr class="my-4" width="100%"><br>
+                <hr class="my-4" width="100%">
+                <div class="row">
                     <div class="col-4"></div>
                     <div class="col-4">
                         <label for="Reset database"><h4>Danger</h4></label>
@@ -116,7 +134,9 @@
     </main>
 </body>
 <script src="static/js/general.js"></script> 
-<script src="static/js/settings.js"></script>
+<script src="static/js/settings.js" type="module">
+    exportDatabase();
+</script>
 <script>
     getFromDB('get_languages', 'removeLanguage', 'languages');
 

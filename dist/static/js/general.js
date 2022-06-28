@@ -1,3 +1,5 @@
+const invoke = window.__TAURI__.invoke;
+
 function isNumeric(val) {
     return /^-?\d+$/.test(val);
 }

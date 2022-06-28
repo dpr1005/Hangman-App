@@ -1,7 +1,10 @@
+use std::error::Error;
+
+use csv::Writer;
 use rusqlite::{Connection, Result};
 
 use crate::structs::Word;
-use super::DB_PATH;
+use super::{DB_PATH, WORDS_CSV_PATH};
 
 pub fn insert_word(record: Word) -> Result<()> {
     let size = record.word.len() as i32;
@@ -262,4 +265,34 @@ fn close_connection(conn: Connection) {
         Ok(()) => (),
         Err(err) => println!("Connection close failed: {:?}", err),
     }
+}
+
+pub fn export_db_() -> Result<(), Box<dyn Error>> {
+    let mut wtr = Writer::from_path(WORDS_CSV_PATH)?;
+
+    wtr.write_record(&["word", "language", "type", "group_", "size"])?;
+    wtr.flush()?;
+    println!("Exporting words to {}", WORDS_CSV_PATH);
+    let conn: Connection = Connection::open(DB_PATH).unwrap();
+    
+    let mut stmt = conn.prepare("SELECT * FROM words").unwrap();
+    let mut rows = stmt.query([])?;
+    
+    while let Some(row) = rows.next()? {
+        let mut word = Word {
+            word: row.get(0)?,
+            language: row.get(1)?,
+            type_: row.get(2)?,
+            group: row.get(3)?,
+            size: row.get(0)?,
+        };
+
+        word.size = word.word.len().to_string();
+
+        wtr.write_record(&[&word.word, &word.language, &word.type_, &word.group, &word.size])?;
+        wtr.flush()?;
+        println!("Exporting word: {}", word.word);
+    }
+    
+    Ok(())
 }
