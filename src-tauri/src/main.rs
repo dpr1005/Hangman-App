@@ -31,13 +31,13 @@ fn kill_app() {
 }
 
 #[tauri::command]
-fn find_lengths(word_type: String, group: String, language: String) -> Vec<i32>{
-    return get_unique_lengths(word_type, group, language).unwrap();
+fn find_lengths(word_type: String, group: String, lang: String) -> Vec<i32>{
+    return get_unique_lengths(word_type, group, lang).unwrap();
 }
 
 #[tauri::command]
-fn generate_word(word_type: String, group: String, length: String, language: String) -> Vec<String>{
-    return get_words(word_type, group, length, language).unwrap();
+fn generate_word(word_type: String, group: String, length: String, lang: String) -> Vec<String>{
+    return get_words(word_type, group, length, lang).unwrap();
 }
 
 #[tauri::command]

@@ -30,8 +30,10 @@ pub fn insert_word(record: Word) -> Result<()> {
     Ok(())
 }
 
-pub fn remove_word_(word: String, lang: String) -> Result<()> {
+pub fn remove_word_(word: String, mut lang: String) -> Result<()> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
+
+    lang = lang.to_uppercase();
 
     conn.execute(
         "DELETE FROM words WHERE word = ?1 AND language = ?2",
@@ -43,11 +45,13 @@ pub fn remove_word_(word: String, lang: String) -> Result<()> {
     Ok(())
 }
 
-pub fn get_unique_lengths(type_: String, group_: String, lang: String) -> Result<Vec<i32>> {
+pub fn get_unique_lengths(type_: String, group_: String, mut lang: String) -> Result<Vec<i32>> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
     let query;
     let mut stmt;
     let mut rows;
+
+    lang = lang.to_uppercase();
 
     if type_ == "all" && group_ != "all" {
         query = "SELECT DISTINCT size FROM words WHERE group_ = $1 AND language = $2";
@@ -78,13 +82,15 @@ pub fn get_unique_lengths(type_: String, group_: String, lang: String) -> Result
 }
 
 
-pub fn get_words(type_: String, group_: String, length: String, lang: String) -> Result<Vec<String>> {
+pub fn get_words(type_: String, group_: String, length: String, mut lang: String) -> Result<Vec<String>> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
     let mut query: String = "".to_owned();
     let mut stmt;
     let mut rows;
     let mut size: String = " AND size = ".to_owned();
     let mut use_size: bool = false;
+
+    lang = lang.to_uppercase();
 
     if length.bytes().all(|c| c.is_ascii_digit()) {
         use_size = true;
@@ -131,8 +137,10 @@ pub fn get_words(type_: String, group_: String, length: String, lang: String) ->
     Ok(words)
 }
 
-pub fn get_unique_types(lang: String) -> Result<Vec<String>> {
+pub fn get_unique_types(mut lang: String) -> Result<Vec<String>> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
+
+    lang = lang.to_uppercase();
 
     let mut stmt = conn.prepare("SELECT DISTINCT type FROM words WHERE language = $1").unwrap();
     let mut rows = stmt.query(&[&lang])?;
@@ -159,8 +167,10 @@ pub fn get_unique_langs() -> Result<Vec<String>> {
     Ok(languages)
 }
 
-pub fn get_unique_groups(lang: String) -> Result<Vec<String>> {
+pub fn get_unique_groups(mut lang: String) -> Result<Vec<String>> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
+
+    lang = lang.to_uppercase();
 
     let mut stmt = conn.prepare("SELECT DISTINCT group_ FROM words WHERE language = $1").unwrap();
     let mut rows = stmt.query(&[&lang])?;
@@ -173,8 +183,10 @@ pub fn get_unique_groups(lang: String) -> Result<Vec<String>> {
     Ok(groups)
 }
 
-fn insert_type(type_: String, lang: String) -> Result<(), ()> {
+fn insert_type(type_: String, mut lang: String) -> Result<(), ()> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
+
+    lang = lang.to_uppercase();
 
     match conn.execute("INSERT INTO types (type, language) VALUES (?1, ?2)", 
         &[&type_, &lang]) {
@@ -187,8 +199,10 @@ fn insert_type(type_: String, lang: String) -> Result<(), ()> {
     Ok(())
 }
 
-fn insert_lang(lang: String) -> Result<(), ()> {
+fn insert_lang(mut lang: String) -> Result<(), ()> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
+
+    lang = lang.to_uppercase();
     
      match conn.execute("INSERT INTO languages (language) VALUES (?1)", 
         &[&lang]) {
@@ -201,8 +215,10 @@ fn insert_lang(lang: String) -> Result<(), ()> {
     Ok(())
 }
 
-pub fn remove_lang(lang: String) -> Result<()> {
+pub fn remove_lang(mut lang: String) -> Result<()> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
+
+    lang = lang.to_uppercase();
 
     let mut stmt = conn.prepare("DELETE FROM words WHERE language = $1").unwrap();
     stmt.execute(&[&lang])?;
@@ -216,8 +232,10 @@ pub fn remove_lang(lang: String) -> Result<()> {
     Ok(())
 }
 
-pub fn remove_type_(type_: String, lang: String) -> Result<()> {
+pub fn remove_type_(type_: String, mut lang: String) -> Result<()> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
+
+    lang = lang.to_uppercase();
 
     let mut stmt = conn.prepare("DELETE FROM words WHERE type = $1 AND language = $2").unwrap();
     stmt.execute(&[&type_, &lang])?;
@@ -228,8 +246,10 @@ pub fn remove_type_(type_: String, lang: String) -> Result<()> {
     Ok(())
 }
 
-pub fn remove_group_(group_: String, lang: String) -> Result<()> {
+pub fn remove_group_(group_: String, mut lang: String) -> Result<()> {
     let conn: Connection = Connection::open(DB_PATH).unwrap();
+
+    lang = lang.to_uppercase();
 
     let mut stmt = conn.prepare("DELETE FROM words WHERE group_ = $1 AND language = $2").unwrap();
     stmt.execute(&[&group_, &lang])?;
