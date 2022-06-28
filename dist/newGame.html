@@ -39,7 +39,7 @@
                 <hr class="my-4" width="100%">
                 <div class="row">
                     <div class="col-md-5">
-                        <form name="wordLangForm" onchange="return updateFormData('wordTypeSelect')">
+                        <form name="wordLangForm" onchange="return updateFormData('languagesSelect')">
                             <label for="wordType">
                                 <h2>Language to play</h2>
                             </label>
@@ -131,6 +131,7 @@
 
     function checkNonEmpty(id, _alert=false) {
         var strToCheck = document.getElementById(id).value;
+        console.log(strToCheck +' - ' +  id);
         if (strToCheck == "" ) {
             if (_alert) {
                 alert("A word must be selected or written in order to play.");
@@ -143,14 +144,13 @@
 
     function updateFormData(id) {
         checkNonEmpty(id, true);
+        findWordTypes();
+        findWordGroups();
         readyToCount();
         allowStarting();
-        
     }
 
     getFromDB('get_languages', 'languagesSelect', 'languages');
-    findWordTypes();
-    findWordGroups();
 </script>
 
 </html>

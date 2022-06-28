@@ -2,9 +2,10 @@ const invoke = window.__TAURI__.invoke;
 
 function findWordTypes() {
     invoke('get_types', {
-        lang: document.getElementById('languagesSelect').value
+        lang: document.getElementById('languagesSelect').value.toUpperCase()
     })
     .then(function (result) {
+        console.log('Types: ' + result)
         addOptionsToSelect('wordTypeSelect', result);
     })
     .catch(e => {
@@ -14,9 +15,10 @@ function findWordTypes() {
 
 function findWordGroups() {
     invoke('get_groups', {
-        lang: document.getElementById('languagesSelect').value
+        lang: document.getElementById('languagesSelect').value.toUpperCase()
     })
     .then(function (result) {
+        console.log('Groups: ' + result)
         addOptionsToSelect('wordGroupSelect', result);
     })
     .catch(e => {
@@ -28,14 +30,14 @@ function findWordsLength() {
     invoke('find_lengths', {
         wordType: document.getElementById('wordTypeSelect').value,
         group: document.getElementById('wordGroupSelect').value,
-        lang: document.getElementById('languagesSelect').value
+        lang: document.getElementById('languagesSelect').value.toUpperCase()
     })
     .then(function (result) {
         addOptionsToSelect('wordLengthSelect', result);
         allowStarting();
     })
     .catch(e => {
-        alert('There was an error while finding the word lengths');
+        alert('There was an error while finding the word lengths\n'+e);
     });
 }
 
@@ -44,7 +46,7 @@ function generateWord() {
         wordType: document.getElementById('wordTypeSelect').value,
         group: document.getElementById('wordGroupSelect').value,
         length: document.getElementById('wordLengthSelect').value,
-        lang: document.getElementById('languagesSelect').value
+        lang: document.getElementById('languagesSelect').value.toUpperCase()
     })
     .then(function (result) {
         if (result.length > 0) {
